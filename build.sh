@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-docker run --rm -v ${PWD}:/local swaggerapi/swagger-codegen-cli generate \
-    -i openapi.yml \
-    -l go \
-    -o /local/dist/go
+rm -rf dist
+
+docker run --rm \
+  -v $PWD/source:/usr/src/app/source \
+  -w /usr/src/app/source \
+  -v $PWD/dist:/usr/src/app/build \
+  documentation_sdk \
+  /bin/bash -c  "bundle exec middleman build --clean && chown -R $UID ../build"
